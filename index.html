@@ -1,0 +1,536 @@
+<!-- Enhanced Home Page v2 -->
+<!DOCTYPE html>
+
+<html class="dark scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Portfolio - Textured Noir</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#020617",
+                        "surface": "#0f172a",
+                        "surface-elevated": "#1e293b",
+                        "border-subtle": "#334155",
+                        "text-muted": "#94a3b8",
+                        "text-accent": "#f8fafc"
+                    },
+                    fontFamily: {
+                        "display": ["Outfit", "sans-serif"],
+                        "serif": ["Playfair Display", "serif"],
+                        "mono": ["JetBrains Mono", "monospace"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem", 
+                        "sm": "0.125rem",
+                        "lg": "0.25rem", 
+                        "xl": "0.5rem", 
+                        "full": "0.75rem"
+                    },
+                    keyframes: {
+                        spinSlow: {
+                            'from': { transform: 'rotate(0deg)' },
+                            'to': { transform: 'rotate(360deg)' },
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0) translateX(0)' },
+                            '50%': { transform: 'translateY(-30px) translateX(15px)' },
+                        },
+                        pulseSlow: {
+                            '0%, 100%': { opacity: '0.4' },
+                            '50%': { opacity: '0.8' },
+                        },
+                        spinSlow: {
+                            'from': { transform: 'rotate(0deg)' },
+                            'to': { transform: 'rotate(360deg)' },
+                        }
+                    },
+                    animation: {
+                        spinSlow: 'spinSlow 60s linear infinite',
+                        fadeIn: 'fadeIn 1.2s ease-in-out forwards',
+                        float: 'float 25s ease-in-out infinite',
+                        pulseSlow: 'pulseSlow 12s ease-in-out infinite',
+                        spinSlow: 'spinSlow 60s linear infinite',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.08; /* Increased opacity for more texture */
+            mix-blend-mode: overlay;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        
+        /* Dynamic Star Background */
+        .bg-stars {
+            background-image: 
+                radial-gradient(1px 1px at 20px 30px, rgba(255,255,255,0.4), rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 40px 70px, rgba(255,255,255,0.3), rgba(0,0,0,0)),
+                radial-gradient(1.5px 1.5px at 90px 40px, rgba(255,255,255,0.5), rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 160px 120px, rgba(255,255,255,0.2), rgba(0,0,0,0));
+            background-repeat: repeat;
+            background-size: 200px 200px;
+            animation: starsMove 100s linear infinite;
+        }
+
+        @keyframes starsMove {
+            from { background-position: 0 0; }
+            to { background-position: -1000px 500px; }
+        }
+
+        .geo-outline {
+            stroke: rgba(255, 255, 255, 0.25);
+            stroke-width: 1.5;
+            fill: none;
+            transition: stroke 0.3s ease;
+        }
+
+        body {
+            background-color: #020617;
+        }
+
+        /* Enhanced Cursor Trail Styles */
+        #cursor-trail {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 40px; /* Larger size */
+            height: 40px;
+            background: radial-gradient(circle, rgba(19, 127, 236, 0.6) 0%, rgba(19, 127, 236, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            filter: blur(4px);
+            transition: transform 0.1s ease-out, opacity 0.3s ease;
+            mix-blend-mode: screen;
+            box-shadow: 0 0 20px rgba(19, 127, 236, 0.4);
+        }
+
+        #cursor-dot {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transition: transform 0.05s ease-out;
+        }
+
+        .ambient-glow {
+            position: fixed;
+            width: 800px; /* Larger gradients */
+            height: 800px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(19, 127, 236, 0.08) 0%, rgba(0,0,0,0) 70%); /* Increased opacity */
+            pointer-events: none;
+            z-index: 1;
+            filter: blur(60px);
+        }
+
+        .geo-outline {
+            stroke: rgba(255, 255, 255, 0.08); /* Increased visibility */
+            stroke-width: 0.75;
+            fill: none;
+            transition: stroke 0.3s ease;
+        }
+
+        /* Ambient Glow behind cards */
+        .card-glow {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(19, 127, 236, 0.12) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .project-card:hover .card-glow {
+            opacity: 1;
+        }
+
+        /* Digital Dust Particles */
+        .particle {
+            position: fixed;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 5;
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen selection:bg-primary/30 selection:text-primary overflow-x-hidden antialiased opacity-0 animate-fadeIn">
+<!-- Cursor Elements -->
+<div id="cursor-trail"></div>
+<div id="cursor-dot"></div>
+<!-- Enhanced Background Animations -->
+<div class="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-stars">
+<div class="absolute inset-0 bg-background-dark/80 backdrop-blur-[1px]"></div>
+<!-- Ambient Light Gradients -->
+<div class="ambient-glow top-0 left-0 -translate-x-1/2 -translate-y-1/2 opacity-30 animate-pulseSlow"></div>
+<div class="ambient-glow bottom-0 right-0 translate-x-1/3 translate-y-1/3 opacity-20 animate-float" style="animation-delay: -5s;"></div>
+<div class="ambient-glow top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-20 bg-primary/5"></div>
+<!-- Large Geometric Outlines - Layered -->
+<svg class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full opacity-40 animate-spinSlow" viewBox="0 0 800 800">
+<rect class="geo-outline" height="600" rx="4" transform="rotate(15 400 400)" width="600" x="100" y="100"></rect>
+<circle class="geo-outline" cx="400" cy="400" r="380"></circle>
+</svg>
+
+<!-- Additional Floating Geometry -->
+<svg class="absolute top-1/3 left-1/4 -translate-x-1/2 -translate-y-1/2 w-96 h-96 opacity-30 animate-spinSlow" style="animation-direction: reverse; animation-duration: 120s;" viewBox="0 0 400 400">
+<polygon class="geo-outline" points="200,50 350,300 50,300"></polygon>
+</svg>
+<svg class="absolute bottom-1/4 right-1/4 translate-x-1/4 translate-y-1/4 w-64 h-64 opacity-20 animate-spinSlow" style="animation-duration: 45s;" viewBox="0 0 400 400">
+<rect class="geo-outline" height="200" width="200" x="100" y="100" transform="rotate(45 200 200)"></rect>
+<circle class="geo-outline" cx="200" cy="200" r="80" stroke-dasharray="2 6"></circle>
+</svg>
+</div>
+<!-- Global Noise Overlay -->
+<div aria-hidden="true" class="noise-overlay"></div>
+<!-- Floating Navigation Bar -->
+<header class="fixed top-0 left-0 right-0 h-12 z-40 bg-background-dark/80 backdrop-blur-md flex items-center justify-center px-6">
+<div class="w-full max-w-2xl flex items-center justify-between">
+<!-- Logo/Brand -->
+<div class="flex items-center gap-2 group">
+<span class="material-symbols-outlined text-[18px] text-text-muted group-hover:text-primary transition-colors duration-150">terminal</span>
+</div>
+<!-- Navigation Links -->
+<nav class="flex items-center gap-6">
+<a class="text-sm font-medium text-text-accent transition-colors duration-150 relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:w-full after:h-[1px] after:bg-primary" href="#home">Home</a>
+<a class="text-sm font-medium text-text-muted hover:text-primary transition-colors duration-150" href="#projects">Projects</a>
+<a class="text-sm font-medium text-text-muted hover:text-primary transition-colors duration-150" href="#resume">Resume</a>
+</nav>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="relative z-10 w-full">
+<!-- Hero Section -->
+<section id="home" class="flex min-h-screen flex-col items-center justify-center px-6 pt-24 pb-16">
+<div class="w-full max-w-2xl flex flex-col gap-8">
+<div class="flex flex-col gap-6 items-start">
+<div class="flex flex-col gap-2">
+<p class="text-sm font-medium text-primary tracking-widest uppercase">Portfolio</p>
+<h1 class="text-5xl sm:text-6xl font-serif font-extrabold text-text-accent tracking-[-0.033em] leading-[1.1]">
+                    Student <br/>
+<span class="text-text-muted">/ Builder</span>
+</h1>
+</div>
+<p class="text-base text-text-muted leading-relaxed max-w-lg font-mono">
+                Currently a 2nd-year BCA student focused on building clean software, exploring system architecture, and writing efficient code.
+            </p>
+</div>
+<!-- Action & Social Links -->
+<div class="flex items-center gap-4 mt-4 pt-8">
+<a href="#projects" class="flex items-center justify-center h-10 px-5 bg-surface border border-border-subtle text-text-accent text-sm font-bold rounded hover:bg-surface-elevated hover:border-primary/50 transition-all duration-200 group">
+<span class="group-hover:text-primary transition-colors">View Projects</span>
+</a>
+<div class="flex items-center gap-3 ml-4">
+<a aria-label="Email" class="flex items-center gap-2 px-3 h-10 rounded border border-transparent hover:border-border-subtle hover:bg-surface text-text-muted hover:text-primary transition-all duration-200" href="mailto:rijulsiva2018@gmail.com">
+<span class="material-symbols-outlined text-[20px]">mail</span>
+<span class="text-xs font-mono">rijulsiva2018@gmail.com</span>
+</a>
+<a aria-label="GitHub" class="flex items-center justify-center size-10 rounded border border-transparent hover:border-border-subtle hover:bg-surface text-text-muted hover:text-primary transition-all duration-200" href="https://github.com/rijul-siva" target="_blank" rel="noopener noreferrer">
+<span class="material-symbols-outlined text-[20px]">code</span>
+</a>
+<a aria-label="Instagram" class="flex items-center justify-center size-10 rounded border border-transparent hover:border-border-subtle hover:bg-surface text-text-muted hover:text-primary transition-all duration-200" href="https://instagram.com/rijul.siva" target="_blank" rel="noopener noreferrer">
+<span class="material-symbols-outlined text-[20px]">photo_camera</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Projects Section -->
+<section id="projects" class="flex flex-col items-center justify-center px-6 py-24">
+    <div class="w-full max-w-5xl">
+        <div class="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
+            <div class="max-w-2xl">
+                <h2 class="text-4xl md:text-5xl font-serif font-bold text-text-accent tracking-tight mb-4">Selected Work</h2>
+                <p class="text-base text-text-muted font-mono leading-relaxed">
+                    A collection of projects exploring web development, system design, and algorithmic problem-solving.
+                </p>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Project 1 -->
+            <div class="project-card group relative flex flex-col bg-surface border border-border-subtle rounded-sm overflow-hidden hover:border-text-muted transition-colors duration-300 h-full">
+                <div class="card-glow"></div>
+                <!-- Image container -->
+                <div class="relative h-48 sm:h-64 w-full overflow-hidden bg-surface-elevated border-b border-border-subtle">
+                    <div class="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <span class="text-text-muted font-mono text-sm tracking-widest uppercase">Project Preview</span>
+                    </div>
+                </div>
+                <!-- Content -->
+                <div class="p-6 flex flex-col flex-grow">
+                    <div class="text-xs font-mono text-primary mb-3">01 / Full-Stack</div>
+                    <h3 class="text-xl font-serif font-bold text-text-accent mb-3 group-hover:text-primary transition-colors">Echo | Real-time Chat</h3>
+                    <p class="text-sm text-text-muted leading-relaxed mb-6 font-mono flex-grow">
+                        A scalable real-time messaging application built with WebSockets, allowing instant communication with read receipts and typing indicators.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="px-2 py-1 text-[10px] font-mono uppercase bg-background-dark border border-border-subtle rounded-sm text-text-muted">React</span>
+                        <span class="px-2 py-1 text-[10px] font-mono uppercase bg-background-dark border border-border-subtle rounded-sm text-text-muted">Node.js</span>
+                        <span class="px-2 py-1 text-[10px] font-mono uppercase bg-background-dark border border-border-subtle rounded-sm text-text-muted">Socket.io</span>
+                    </div>
+                    <div class="flex items-center gap-4 mt-auto pt-4 border-t border-border-subtle">
+                        <a class="text-xs font-mono uppercase text-text-accent hover:text-primary transition-colors flex items-center gap-2" href="#">
+                            View Output <span class="material-symbols-outlined text-[14px]">call_made</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <!-- Project 2 -->
+            <div class="project-card group relative flex flex-col bg-surface border border-border-subtle rounded-sm overflow-hidden hover:border-text-muted transition-colors duration-300 h-full">
+                <div class="card-glow"></div>
+                <!-- Image container -->
+                <div class="relative h-48 sm:h-64 w-full overflow-hidden bg-surface-elevated border-b border-border-subtle">
+                    <div class="absolute inset-0 opacity-20 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:12px_12px]"></div>
+                    <div class="absolute inset-0 flex items-center justify-center">
+                        <span class="text-text-muted font-mono text-sm tracking-widest uppercase">CLI Interface</span>
+                    </div>
+                </div>
+                <!-- Content -->
+                <div class="p-6 flex flex-col flex-grow">
+                    <div class="text-xs font-mono text-text-muted mb-3">02 / Systems</div>
+                    <h3 class="text-xl font-serif font-bold text-text-accent mb-3 group-hover:text-primary transition-colors">MemDB | In-Memory Store</h3>
+                    <p class="text-sm text-text-muted leading-relaxed mb-6 font-mono flex-grow">
+                        A lightweight, Redis-like key-value store crafted in C++. Implements custom memory management and a custom TCP protocol.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mb-6">
+                        <span class="px-2 py-1 text-[10px] font-mono uppercase bg-background-dark border border-border-subtle rounded-sm text-text-muted">C++</span>
+                        <span class="px-2 py-1 text-[10px] font-mono uppercase bg-background-dark border border-border-subtle rounded-sm text-text-muted">Sockets</span>
+                    </div>
+                    <div class="flex items-center gap-4 mt-auto pt-4 border-t border-border-subtle">
+                        <a class="text-xs font-mono uppercase text-text-muted hover:text-text-accent transition-colors flex items-center gap-2" href="#">
+                            Source <span class="material-symbols-outlined text-[14px]">code</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Resume Section -->
+<section id="resume" class="flex flex-col items-center justify-center px-6 py-24">
+    <div class="w-full max-w-5xl">
+        <div class="flex flex-col lg:flex-row gap-12 lg:gap-20">
+            <!-- Left Column: Timeline -->
+            <div class="flex-1">
+                <div class="relative pl-6 md:pl-8">
+                    <!-- Vertical Line -->
+                    <div class="absolute left-[3px] md:left-[5px] top-2 bottom-0 w-[1px] bg-border-subtle"></div>
+                    <!-- Timeline Item 1 -->
+                    <div class="relative mb-12 group">
+                        <div class="absolute -left-[27px] md:-left-[29px] top-1.5 w-[6px] h-[6px] bg-background-dark border border-text-muted group-hover:border-primary group-hover:bg-primary/20 transition-colors duration-300"></div>
+                        <div class="flex flex-col gap-1.5">
+                            <span class="text-xs font-mono text-primary uppercase tracking-wider">Current • 2023 - Present</span>
+                            <h3 class="text-xl font-serif font-semibold text-text-accent tracking-tight">Bachelor of Computer Applications (BCA)</h3>
+                            <span class="text-sm text-text-muted font-mono">University of Technology, 2nd Year</span>
+                            <div class="mt-4 text-sm text-text-muted leading-relaxed bg-surface border border-border-subtle p-5 rounded-sm">
+                                <p>Focusing on core computer science fundamentals, data structures, and algorithms.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Timeline Item 2 -->
+                    <div class="relative mb-12 group">
+                        <div class="absolute -left-[27px] md:-left-[29px] top-1.5 w-[6px] h-[6px] bg-background-dark border border-text-muted group-hover:border-primary group-hover:bg-primary/20 transition-colors duration-300"></div>
+                        <div class="flex flex-col gap-1.5">
+                            <span class="text-xs font-mono text-text-muted uppercase tracking-wider">Summer 2023</span>
+                            <h3 class="text-xl font-serif font-semibold text-text-accent tracking-tight">Software Engineering Intern</h3>
+                            <span class="text-sm text-text-muted font-mono">TechNova Solutions</span>
+                            <div class="mt-4 text-sm text-text-muted leading-relaxed bg-surface border border-border-subtle p-5 rounded-sm">
+                                <p>Developed internal tools using React and Node.js. Improved database query performance by 15%.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Right Column: Skills -->
+            <div class="w-full lg:w-[320px]">
+                <div class="flex flex-col gap-10">
+                    <div>
+                        <h3 class="text-xs font-mono tracking-widest uppercase text-text-muted mb-5 flex items-center gap-3">
+                            <span class="material-symbols-outlined text-[16px]">code</span>
+                            Core Languages
+                        </h3>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="border border-border-subtle bg-surface py-2 px-2 text-center text-xs font-mono text-text-muted rounded-sm">C++</div>
+                            <div class="border border-border-subtle bg-surface py-2 px-2 text-center text-xs font-mono text-text-muted rounded-sm">Python</div>
+                            <div class="border border-border-subtle bg-surface py-2 px-2 text-center text-xs font-mono text-text-muted rounded-sm">JS</div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xs font-mono tracking-widest uppercase text-text-muted mb-5 flex items-center gap-3">
+                            <span class="material-symbols-outlined text-[16px]">layers</span>
+                            Tools
+                        </h3>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div class="border border-border-subtle bg-surface py-2 px-2 text-center text-xs font-mono text-text-muted rounded-sm">React</div>
+                            <div class="border border-border-subtle bg-surface py-2 px-2 text-center text-xs font-mono text-text-muted rounded-sm">Git</div>
+                            <div class="border border-border-subtle bg-surface py-2 px-2 text-center text-xs font-mono text-text-muted rounded-sm">Linux</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+</main>
+
+<!-- Footer -->
+<footer class="py-8 px-6 text-center bg-background-dark/80 backdrop-blur-md relative z-10">
+    <p class="text-xs font-mono text-text-muted uppercase tracking-widest">© 2026 Noir.Dev // Build v2.0</p>
+</footer>
+<script>
+    const trail = document.getElementById('cursor-trail');
+    const dot = document.getElementById('cursor-dot');
+    let mouseX = 0;
+    let mouseY = 0;
+    let trailX = 0;
+    let trailY = 0;
+    let dotX = 0;
+    let dotY = 0;
+
+    // Create "digital dust" particles
+    const particleCount = 20;
+    const particles = [];
+    for (let i = 0; i < particleCount; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        const size = Math.random() * 2 + 1;
+        p.style.width = `${size}px`;
+        p.style.height = `${size}px`;
+        p.style.opacity = Math.random() * 0.3 + 0.1;
+        document.body.appendChild(p);
+        particles.push({
+            el: p,
+            x: Math.random() * window.innerWidth,
+            y: Math.random() * window.innerHeight,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: (Math.random() - 0.5) * 0.5,
+            originalOpacity: p.style.opacity
+        });
+    }
+
+    window.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    function animate() {
+        // Easing / Momentum effect for trail
+        const trailEase = 0.12;
+        trailX += (mouseX - trailX) * trailEase;
+        trailY += (mouseY - trailY) * trailEase;
+
+        // Snappier easing for dot
+        const dotEase = 0.3;
+        dotX += (mouseX - dotX) * dotEase;
+        dotY += (mouseY - dotY) * dotEase;
+
+        trail.style.transform = `translate(${trailX - 20}px, ${trailY - 20}px)`;
+        dot.style.transform = `translate(${dotX - 2}px, ${dotY - 2}px)`;
+        
+        // Update particles
+        particles.forEach(p => {
+            p.x += p.vx;
+            p.y += p.vy;
+
+            // Simple wrap around
+            if (p.x < 0) p.x = window.innerWidth;
+            if (p.x > window.innerWidth) p.x = 0;
+            if (p.y < 0) p.y = window.innerHeight;
+            if (p.y > window.innerHeight) p.y = 0;
+
+            // React to cursor
+            const dx = mouseX - p.x;
+            const dy = mouseY - p.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 150) {
+                const angle = Math.atan2(dy, dx);
+                const force = (150 - dist) / 1500;
+                p.vx -= Math.cos(angle) * force;
+                p.vy -= Math.sin(angle) * force;
+                p.el.style.opacity = 0.6; // Light up near cursor
+            } else {
+                p.el.style.opacity = p.originalOpacity;
+            }
+
+            p.el.style.transform = `translate(${p.x}px, ${p.y}px)`;
+        });
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    // Smooth scroll and active link highlighting
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('nav a:not([href="mailto:rijulsiva2018@gmail.com"])');
+
+    window.addEventListener('scroll', () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (pageYOffset >= sectionTop - 150) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('after:bg-primary', 'text-text-accent');
+            link.classList.add('text-text-muted');
+            if (link.getAttribute('href').includes(current)) {
+                link.classList.add('after:bg-primary', 'text-text-accent');
+                link.classList.remove('text-text-muted');
+            }
+        });
+    });
+
+    // Hide/Show cursor trail
+    document.addEventListener('mouseleave', () => {
+        trail.style.opacity = '0';
+        dot.style.opacity = '0';
+    });
+    document.addEventListener('mouseenter', () => {
+        trail.style.opacity = '1';
+        dot.style.opacity = '1';
+    });
+</script>
+</body></html>
